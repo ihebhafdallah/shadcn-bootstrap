@@ -1,0 +1,675 @@
+/* ==========================================================================
+   shadcn-bootstrap.css
+   Restyles Bootstrap to visually resemble shadcn/ui (React).
+   Load AFTER bootstrap.min.css / bootstrap.css.
+
+   Usage:
+   <link rel="stylesheet" href="bootstrap.min.css">
+   <link rel="stylesheet" href="shadcn-bootstrap.css">
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS (shadcn "zinc/slate" default theme, light + dark)
+   -------------------------------------------------------------------------- */
+:root {
+  /* shadcn base tokens (HSL-ish values translated to hex for simplicity) */
+  --sc-background: #ffffff;
+  --sc-foreground: #09090b;
+  --sc-card: #ffffff;
+  --sc-card-foreground: #09090b;
+  --sc-popover: #ffffff;
+  --sc-popover-foreground: #09090b;
+
+  --sc-primary: #18181b;
+  --sc-primary-foreground: #fafafa;
+
+  --sc-secondary: #f4f4f5;
+  --sc-secondary-foreground: #18181b;
+
+  --sc-muted: #f4f4f5;
+  --sc-muted-foreground: #71717a;
+
+  --sc-accent: #f4f4f5;
+  --sc-accent-foreground: #18181b;
+
+  --sc-destructive: #ef4444;
+  --sc-destructive-foreground: #fafafa;
+
+  --sc-success: #16a34a;
+  --sc-warning: #f59e0b;
+  --sc-info: #3b82f6;
+
+  --sc-border: #e4e4e7;
+  --sc-input: #e4e4e7;
+  --sc-ring: #a1a1aa;
+
+  --sc-radius: 0.5rem;              /* shadcn default radius */
+  --sc-radius-sm: calc(var(--sc-radius) - 4px);
+  --sc-radius-md: calc(var(--sc-radius) - 2px);
+  --sc-radius-lg: var(--sc-radius);
+
+  --sc-font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --sc-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --sc-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --sc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --sc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Remap Bootstrap variables to shadcn tokens so BS components inherit them */
+  --bs-body-bg: var(--sc-background);
+  --bs-body-color: var(--sc-foreground);
+  --bs-body-font-family: var(--sc-font-sans);
+
+  --bs-primary: var(--sc-primary);
+  --bs-primary-rgb: 24, 24, 27;
+  --bs-secondary: var(--sc-secondary);
+  --bs-secondary-rgb: 244, 244, 245;
+  --bs-success: var(--sc-success);
+  --bs-danger: var(--sc-destructive);
+  --bs-warning: var(--sc-warning);
+  --bs-info: var(--sc-info);
+
+  --bs-border-color: var(--sc-border);
+  --bs-border-radius: var(--sc-radius-md);
+  --bs-border-radius-sm: var(--sc-radius-sm);
+  --bs-border-radius-lg: var(--sc-radius-lg);
+  --bs-border-radius-xl: 0.75rem;
+
+  --bs-link-color: var(--sc-foreground);
+  --bs-link-hover-color: var(--sc-foreground);
+
+  --bs-box-shadow: var(--sc-shadow);
+  --bs-box-shadow-sm: var(--sc-shadow-sm);
+  --bs-box-shadow-lg: var(--sc-shadow-lg);
+}
+
+/* Optional dark mode: toggle by adding data-bs-theme="dark" on <html> */
+[data-bs-theme="dark"] {
+  --sc-background: #09090b;
+  --sc-foreground: #fafafa;
+  --sc-card: #09090b;
+  --sc-card-foreground: #fafafa;
+  --sc-popover: #09090b;
+  --sc-popover-foreground: #fafafa;
+
+  --sc-primary: #fafafa;
+  --sc-primary-foreground: #18181b;
+
+  --sc-secondary: #27272a;
+  --sc-secondary-foreground: #fafafa;
+
+  --sc-muted: #27272a;
+  --sc-muted-foreground: #a1a1aa;
+
+  --sc-accent: #27272a;
+  --sc-accent-foreground: #fafafa;
+
+  --sc-border: #27272a;
+  --sc-input: #27272a;
+  --sc-ring: #71717a;
+
+  --bs-body-bg: var(--sc-background);
+  --bs-body-color: var(--sc-foreground);
+  --bs-border-color: var(--sc-border);
+}
+
+/* --------------------------------------------------------------------------
+   2. GLOBAL / TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+body {
+  font-family: var(--sc-font-sans);
+  background-color: var(--sc-background);
+  color: var(--sc-foreground);
+  font-size: 0.875rem; /* shadcn leans slightly smaller than BS default */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--sc-foreground);
+}
+
+small, .text-muted {
+  color: var(--sc-muted-foreground) !important;
+}
+
+hr {
+  border-color: var(--sc-border);
+  opacity: 1;
+}
+
+a {
+  color: var(--sc-foreground);
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--sc-foreground);
+  opacity: 0.8;
+}
+
+/* Focus ring style shared across interactive elements (shadcn signature) */
+.btn:focus-visible,
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus,
+.nav-link:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sc-background), 0 0 0 4px var(--sc-ring) !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. BUTTONS
+   -------------------------------------------------------------------------- */
+.btn {
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: var(--sc-radius-md);
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: none;
+}
+
+.btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8rem; border-radius: var(--sc-radius-sm); }
+.btn-lg { padding: 0.625rem 1.25rem; font-size: 0.9rem; border-radius: var(--sc-radius-lg); }
+
+/* Primary = shadcn "default" variant (solid dark button) */
+.btn-primary {
+  background-color: var(--sc-primary);
+  border-color: var(--sc-primary);
+  color: var(--sc-primary-foreground);
+}
+.btn-primary:hover,
+.btn-primary:active {
+  background-color: var(--sc-primary);
+  border-color: var(--sc-primary);
+  opacity: 0.9;
+  color: var(--sc-primary-foreground);
+}
+
+/* Secondary = shadcn "secondary" variant */
+.btn-secondary {
+  background-color: var(--sc-secondary);
+  border-color: var(--sc-secondary);
+  color: var(--sc-secondary-foreground);
+}
+.btn-secondary:hover {
+  background-color: var(--sc-secondary);
+  opacity: 0.8;
+  color: var(--sc-secondary-foreground);
+}
+
+/* Outline = shadcn "outline" variant */
+.btn-outline-primary,
+.btn-outline-secondary {
+  background-color: transparent;
+  border-color: var(--sc-border);
+  color: var(--sc-foreground);
+}
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover {
+  background-color: var(--sc-accent);
+  border-color: var(--sc-border);
+  color: var(--sc-accent-foreground);
+}
+
+/* Ghost-like = shadcn "ghost" variant, map to btn-link */
+.btn-link {
+  color: var(--sc-foreground);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--sc-radius-md);
+}
+.btn-link:hover {
+  background-color: var(--sc-accent);
+  color: var(--sc-accent-foreground);
+  text-decoration: none;
+}
+
+/* Destructive */
+.btn-danger {
+  background-color: var(--sc-destructive);
+  border-color: var(--sc-destructive);
+  color: var(--sc-destructive-foreground);
+}
+.btn-danger:hover {
+  opacity: 0.9;
+  background-color: var(--sc-destructive);
+  border-color: var(--sc-destructive);
+}
+
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.5;
+}
+
+/* --------------------------------------------------------------------------
+   4. FORMS / INPUTS
+   -------------------------------------------------------------------------- */
+.form-control,
+.form-select {
+  background-color: var(--sc-background);
+  border: 1px solid var(--sc-input);
+  border-radius: var(--sc-radius-md);
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  color: var(--sc-foreground);
+  box-shadow: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.form-control::placeholder {
+  color: var(--sc-muted-foreground);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--sc-ring);
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.375rem;
+  color: var(--sc-foreground);
+}
+
+.form-text {
+  color: var(--sc-muted-foreground);
+  font-size: 0.8rem;
+}
+
+.form-check-input {
+  border-radius: 0.25rem;
+  border: 1px solid var(--sc-input);
+  width: 1rem;
+  height: 1rem;
+}
+.form-check-input:checked {
+  background-color: var(--sc-primary);
+  border-color: var(--sc-primary);
+}
+
+.form-switch .form-check-input {
+  border-radius: 999px;
+}
+
+.input-group-text {
+  background-color: var(--sc-muted);
+  border: 1px solid var(--sc-input);
+  color: var(--sc-muted-foreground);
+  border-radius: var(--sc-radius-md);
+}
+
+/* --------------------------------------------------------------------------
+   5. CARDS
+   -------------------------------------------------------------------------- */
+.card {
+  background-color: var(--sc-card);
+  color: var(--sc-card-foreground);
+  border: 1px solid var(--sc-border);
+  border-radius: 0.75rem;
+  box-shadow: var(--sc-shadow-sm);
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--sc-border);
+  font-weight: 600;
+  padding: 1.25rem 1.5rem 0.75rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-footer {
+  background-color: transparent;
+  border-top: 1px solid var(--sc-border);
+  padding: 1rem 1.5rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.card-subtitle,
+.card-text.text-muted {
+  color: var(--sc-muted-foreground) !important;
+  font-size: 0.875rem;
+}
+
+/* --------------------------------------------------------------------------
+   6. BADGES
+   -------------------------------------------------------------------------- */
+.badge {
+  font-weight: 500;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  padding: 0.25em 0.65em;
+}
+.bg-primary { background-color: var(--sc-primary) !important; color: var(--sc-primary-foreground) !important; }
+.bg-secondary { background-color: var(--sc-secondary) !important; color: var(--sc-secondary-foreground) !important; }
+.bg-light { background-color: var(--sc-muted) !important; color: var(--sc-muted-foreground) !important; }
+.bg-danger { background-color: var(--sc-destructive) !important; }
+
+/* --------------------------------------------------------------------------
+   7. ALERTS
+   -------------------------------------------------------------------------- */
+.alert {
+  border-radius: var(--sc-radius-lg);
+  border: 1px solid var(--sc-border);
+  font-size: 0.875rem;
+  padding: 1rem;
+}
+.alert-primary {
+  background-color: var(--sc-background);
+  border-color: var(--sc-foreground);
+  color: var(--sc-foreground);
+}
+.alert-danger {
+  background-color: #fef2f2;
+  border-color: var(--sc-destructive);
+  color: var(--sc-destructive);
+}
+.alert-success {
+  background-color: #f0fdf4;
+  border-color: var(--sc-success);
+  color: var(--sc-success);
+}
+.alert-warning {
+  background-color: #fffbeb;
+  border-color: var(--sc-warning);
+  color: #92600a;
+}
+.alert-info {
+  background-color: #eff6ff;
+  border-color: var(--sc-info);
+  color: var(--sc-info);
+}
+
+/* --------------------------------------------------------------------------
+   8. NAVBAR / NAV / TABS
+   -------------------------------------------------------------------------- */
+.navbar {
+  background-color: var(--sc-background) !important;
+  border-bottom: 1px solid var(--sc-border);
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  color: var(--sc-foreground) !important;
+}
+
+.nav-link {
+  color: var(--sc-muted-foreground) !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--sc-radius-md);
+  padding: 0.5rem 0.75rem !important;
+}
+.nav-link:hover {
+  color: var(--sc-foreground) !important;
+  background-color: var(--sc-accent);
+}
+.nav-link.active {
+  color: var(--sc-foreground) !important;
+  background-color: var(--sc-accent);
+}
+
+.nav-tabs {
+  border-bottom: 1px solid var(--sc-border);
+}
+.nav-tabs .nav-link {
+  border: none;
+  border-radius: var(--sc-radius-sm) var(--sc-radius-sm) 0 0;
+}
+.nav-tabs .nav-link.active {
+  background-color: var(--sc-muted);
+  border-bottom: 2px solid var(--sc-foreground);
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--sc-primary);
+  color: var(--sc-primary-foreground) !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. DROPDOWNS / POPOVERS / TOOLTIPS
+   -------------------------------------------------------------------------- */
+.dropdown-menu {
+  background-color: var(--sc-popover);
+  color: var(--sc-popover-foreground);
+  border: 1px solid var(--sc-border);
+  border-radius: var(--sc-radius-lg);
+  box-shadow: var(--sc-shadow-md);
+  padding: 0.375rem;
+  font-size: 0.875rem;
+}
+.dropdown-item {
+  border-radius: var(--sc-radius-sm);
+  padding: 0.5rem 0.625rem;
+  color: var(--sc-popover-foreground);
+}
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--sc-accent);
+  color: var(--sc-accent-foreground);
+}
+.dropdown-divider {
+  border-color: var(--sc-border);
+  margin: 0.375rem 0;
+}
+
+.popover {
+  background-color: var(--sc-popover);
+  border: 1px solid var(--sc-border);
+  border-radius: var(--sc-radius-lg);
+  box-shadow: var(--sc-shadow-md);
+}
+.popover-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--sc-border);
+  font-weight: 600;
+}
+
+.tooltip .tooltip-inner {
+  background-color: var(--sc-foreground);
+  color: var(--sc-background);
+  border-radius: var(--sc-radius-sm);
+  font-size: 0.75rem;
+  padding: 0.375rem 0.625rem;
+}
+
+/* --------------------------------------------------------------------------
+   10. MODALS
+   -------------------------------------------------------------------------- */
+.modal-content {
+  background-color: var(--sc-card);
+  color: var(--sc-card-foreground);
+  border: 1px solid var(--sc-border);
+  border-radius: 0.75rem;
+  box-shadow: var(--sc-shadow-lg);
+}
+.modal-header {
+  border-bottom: 1px solid var(--sc-border);
+  padding: 1.5rem;
+}
+.modal-title {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+.modal-body {
+  padding: 1.5rem;
+}
+.modal-footer {
+  border-top: 1px solid var(--sc-border);
+  padding: 1.25rem 1.5rem;
+}
+.modal-backdrop.show {
+  opacity: 0.5;
+  background-color: #000;
+}
+
+/* --------------------------------------------------------------------------
+   11. TABLES
+   -------------------------------------------------------------------------- */
+.table {
+  color: var(--sc-foreground);
+  font-size: 0.875rem;
+  border-color: var(--sc-border);
+}
+.table > thead {
+  border-bottom: 1px solid var(--sc-border);
+}
+.table > thead th {
+  font-weight: 500;
+  color: var(--sc-muted-foreground);
+  text-transform: none;
+  padding: 0.75rem 1rem;
+}
+.table > tbody td {
+  padding: 0.75rem 1rem;
+  border-color: var(--sc-border);
+}
+.table-hover > tbody > tr:hover {
+  background-color: var(--sc-muted);
+}
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: var(--sc-muted);
+}
+
+/* --------------------------------------------------------------------------
+   12. LIST GROUP
+   -------------------------------------------------------------------------- */
+.list-group-item {
+  background-color: var(--sc-background);
+  border-color: var(--sc-border);
+  color: var(--sc-foreground);
+  padding: 0.75rem 1rem;
+}
+.list-group-item.active {
+  background-color: var(--sc-accent);
+  border-color: var(--sc-border);
+  color: var(--sc-accent-foreground);
+}
+.list-group-item-action:hover {
+  background-color: var(--sc-accent);
+  color: var(--sc-accent-foreground);
+}
+
+/* --------------------------------------------------------------------------
+   13. PROGRESS / SPINNERS
+   -------------------------------------------------------------------------- */
+.progress {
+  background-color: var(--sc-secondary);
+  border-radius: 999px;
+  height: 0.5rem;
+}
+.progress-bar {
+  background-color: var(--sc-foreground);
+  border-radius: 999px;
+}
+
+.spinner-border,
+.spinner-grow {
+  color: var(--sc-foreground);
+}
+
+/* --------------------------------------------------------------------------
+   14. PAGINATION
+   -------------------------------------------------------------------------- */
+.pagination .page-link {
+  color: var(--sc-foreground);
+  border: 1px solid var(--sc-border);
+  background-color: var(--sc-background);
+  font-size: 0.875rem;
+  margin: 0 2px;
+  border-radius: var(--sc-radius-sm);
+}
+.pagination .page-item.active .page-link {
+  background-color: var(--sc-primary);
+  border-color: var(--sc-primary);
+  color: var(--sc-primary-foreground);
+}
+.pagination .page-item.disabled .page-link {
+  color: var(--sc-muted-foreground);
+  background-color: var(--sc-background);
+}
+
+/* --------------------------------------------------------------------------
+   15. TOASTS
+   -------------------------------------------------------------------------- */
+.toast {
+  background-color: var(--sc-popover);
+  color: var(--sc-popover-foreground);
+  border: 1px solid var(--sc-border);
+  border-radius: var(--sc-radius-lg);
+  box-shadow: var(--sc-shadow-md);
+}
+.toast-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--sc-border);
+  color: var(--sc-muted-foreground);
+}
+
+/* --------------------------------------------------------------------------
+   16. ACCORDION
+   -------------------------------------------------------------------------- */
+.accordion-item {
+  background-color: var(--sc-background);
+  border: 1px solid var(--sc-border);
+}
+.accordion-button {
+  background-color: var(--sc-background);
+  color: var(--sc-foreground);
+  font-weight: 500;
+  font-size: 0.875rem;
+  box-shadow: none;
+}
+.accordion-button:not(.collapsed) {
+  background-color: var(--sc-muted);
+  color: var(--sc-foreground);
+  box-shadow: none;
+}
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: var(--sc-border);
+}
+.accordion-button::after {
+  filter: none;
+}
+
+/* --------------------------------------------------------------------------
+   17. UTILITIES / SCROLLBAR
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--sc-border);
+  border-radius: 999px;
+  border: 2px solid var(--sc-background);
+}
+
+.shadow-sc-sm { box-shadow: var(--sc-shadow-sm) !important; }
+.shadow-sc { box-shadow: var(--sc-shadow) !important; }
+.shadow-sc-md { box-shadow: var(--sc-shadow-md) !important; }
+.shadow-sc-lg { box-shadow: var(--sc-shadow-lg) !important; }
+
+.rounded-sc-sm { border-radius: var(--sc-radius-sm) !important; }
+.rounded-sc-md { border-radius: var(--sc-radius-md) !important; }
+.rounded-sc-lg { border-radius: var(--sc-radius-lg) !important; }
